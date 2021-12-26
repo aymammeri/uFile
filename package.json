@@ -1,0 +1,30 @@
+{
+  "name": "whole-commerce",
+  "packageManager": "yarn@3.1.1",
+  "description": "e-commerce platform oriented for business-to-business wholesale",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aymammeri/whole-commerce.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aymammeri/whole-commerce/issues"
+  },
+  "homepage": "https://github.com/aymammeri/whole-commerce#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.2",
+    "passport": "^0.5.2",
+    "passport-http-bearer": "^1.0.1"
+  }
+}
