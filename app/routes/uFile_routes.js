@@ -1,4 +1,5 @@
 const express = require('express')
+
 const router = express.Router()
 
 router.post('/upload-avatar', async (req, res) => {
@@ -31,6 +32,4 @@ router.post('/upload-avatar', async (req, res) => {
   }
 })
 
-module.exports = {
-  router
-}
+module.exports = router

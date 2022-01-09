@@ -2,10 +2,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const fileUpload = require('express-fileupload')
+const morgan = require('morgan')
 const cors = require('cors')
 
 // require route files
-const exampleRoutes = require('./app/routes/example_routes')
 const userRoutes = require('./app/routes/user_routes')
 const uFileRoutes = require('./app/routes/uFile_routes')
 
@@ -37,10 +37,8 @@ mongoose.connect(db, {
 // instantiate express application object
 const app = express()
 
-// enable files upload
-app.use(fileUpload({
-  createParentPath: true
-}))
+// enable express-fileupload
+app.use(fileUpload({ createParentPath: true }))
 
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
@@ -59,16 +57,16 @@ app.use(express.json())
 // this parses requests sent by `$.ajax`, which use a different content type
 app.use(express.urlencoded({ extended: true }))
 
+app.use(morgan('dev'))
 // log each request as it comes in for debugging
 app.use(requestLogger)
 
 // register route files
-app.use(exampleRoutes)
 app.use(userRoutes)
 app.use(uFileRoutes)
 
 // register error handling middleware
-// note that this comes after the route middlewares, because it needs to be
+// note that this comes after the route middleware, because it needs to be
 // passed any error messages from them
 app.use(errorHandler)
 
