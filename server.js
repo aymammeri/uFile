@@ -1,7 +1,6 @@
 // require necessary NPM packages
 const express = require('express')
 const mongoose = require('mongoose')
-const fileUpload = require('express-fileupload')
 const morgan = require('morgan')
 const cors = require('cors')
 
@@ -36,9 +35,6 @@ mongoose.connect(db, {
 
 // instantiate express application object
 const app = express()
-
-// enable express-fileupload
-app.use(fileUpload({ createParentPath: true }))
 
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
