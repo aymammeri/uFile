@@ -8,7 +8,27 @@ const fileSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  srcFile: {
+  fieldName: {
+    type: String,
+    required: true
+  },
+  encoding: {
+    type: String,
+    required: true
+  },
+  mimetype: {
+    type: String,
+    required: true
+  },
+  fileName: {
+    type: String,
+    required: true
+  },
+  path: {
+    type: String,
+    required: true
+  },
+  size: {
     type: String,
     required: true
   },
