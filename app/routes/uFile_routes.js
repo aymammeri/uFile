@@ -23,7 +23,13 @@ router.post('/upload', requireToken, upload.single('file'), (req, res, next) => 
   console.log(req.file)
   File.create({
     name: req.file.originalname,
-    srcFile: req.file.path,
+    fieldName: req.file.fieldname,
+    encoding: req.file.encoding,
+    mimetype: req.file.mimetype,
+    destination: req.file.destination,
+    fileName: req.file.filename,
+    path: req.file.path,
+    size: req.file.size,
     owner: req.user._id
   })
     .then(() => res.status(201).send('File uploaded successfully! '))
