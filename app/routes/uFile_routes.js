@@ -37,7 +37,7 @@ router.post('/upload', requireToken, upload.single('file'), (req, res, next) => 
 })
 
 router.get('/files/:id', requireToken, (req, res, next) => {
-  File.findOne({ owner: req.user.id, _id: req.params.id })
+  File.findOne({ _id: req.params.id, owner: req.user.id })
     .then(file => res.status(201).json(file))
     .catch(next)
 })
@@ -49,16 +49,17 @@ router.get('/files', requireToken, (req, res, next) => {
 })
 
 router.patch('/files/:id', requireToken, (req, res, next) => {
-  File.findOne({ owner: req.user.id, _id: req.params.id })
+  File.findOne({ _id: req.params.id, owner: req.user.id })
     .then()
 })
 
-router.delete('/files/delete', requireToken, (req, res, next) => {
-  File.findOne({ _id: req.body.fileID, owner: req.user._id })
-  // .then(file => console.log(file.srcFile))
-  // .then(file => fs.unlink(file.srcFile))
+router.delete('/files/:id', requireToken, (req, res, next) => {
+  // .then(file => console.log(file.path))
   File.deleteOne({ _id: req.body.fileID, owner: req.user._id })
-    .then(file => res.status(201).json(file))
+    .then(file => {
+      // .then(file => fs.unlink(file.path))
+      res.status(201).json(file)
+    })
     .catch(next)
 })
 
