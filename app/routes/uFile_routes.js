@@ -49,15 +49,17 @@ router.get('/files', requireToken, (req, res, next) => {
 })
 
 router.patch('/files/:id', requireToken, (req, res, next) => {
-  File.findOne({ _id: req.params.id, owner: req.user.id })
-    .then()
+
+  File.updateOne({ _id: req.params.id, owner: req.user.id }, {
+    name: req.body.name
+  })
+    .then(file => res.status(200).json(file))
 })
 
 router.delete('/files/:id', requireToken, (req, res, next) => {
-  // .then(file => console.log(file.path))
   File.deleteOne({ _id: req.body.fileID, owner: req.user._id })
     .then(file => {
-      // .then(file => fs.unlink(file.path))
+      // fs.unlink(file.path)
       res.status(201).json(file)
     })
     .catch(next)
