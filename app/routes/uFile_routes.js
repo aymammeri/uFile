@@ -1,12 +1,14 @@
 const express = require('express')
 const passport = require('passport')
 const multer = require('multer')
+// const fs = require('fs')
+// const path = require('path')
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (_req, _file, cb) {
     cb(null, './uploads')
   },
-  filename: function (req, file, cb) {
+  filename: function (_req, file, cb) {
     cb(null, file.originalname)
   }
 })
@@ -19,15 +21,14 @@ const requireToken = passport.authenticate('bearer', { session: false })
 
 const router = express.Router()
 
-router.post('/upload', requireToken, upload.single('file'), (req, res, next) => {
-  console.log(req.file)
+router.post('/files', requireToken, upload.single('file'), (req, res, next) => {
   File.create({
-    name: req.file.originalname,
+    name: req.file.filename,
     fieldName: req.file.fieldname,
     encoding: req.file.encoding,
     mimetype: req.file.mimetype,
     destination: req.file.destination,
-    fileName: req.file.filename,
+    originalName: req.file.originalname,
     path: req.file.path,
     size: req.file.size,
     owner: req.user._id
@@ -48,16 +49,16 @@ router.get('/files', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-router.patch('/files/:id', requireToken, (req, res, next) => {
-
-  File.updateOne({ _id: req.params.id, owner: req.user.id }, {
-    name: req.body.name
-  })
-    .then(file => res.status(200).json(file))
-})
+// router.patch('/files/:id', requireToken, (req, res, next) => {
+//   File.findOne({ _id: req.params.id, owner: req.user.id })
+//     .then(file => fs.renameSync(file.path, 'uploads/' + req.body.name + path.parse(file.originalName).ext))
+//   File.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, { name: req.body.name +  , path: })
+//     res.status(200).json(file)
+//     .catch(next)
+// })
 
 router.delete('/files/:id', requireToken, (req, res, next) => {
-  File.deleteOne({ _id: req.body.fileID, owner: req.user._id })
+  File.deleteOne({ _id: req.params.id, owner: req.user._id })
     .then(file => {
       // fs.unlink(file.path)
       res.status(201).json(file)
