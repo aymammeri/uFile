@@ -1,8 +1,8 @@
 const express = require('express')
 const passport = require('passport')
 const multer = require('multer')
-// const fs = require('fs')
-// const path = require('path')
+const fs = require('fs')
+const path = require('path')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -49,13 +49,28 @@ router.get('/files', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// router.patch('/files/:id', requireToken, (req, res, next) => {
-//   File.findOne({ _id: req.params.id, owner: req.user.id })
-//     .then(file => fs.renameSync(file.path, 'uploads/' + req.body.name + path.parse(file.originalName).ext))
-//   File.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, { name: req.body.name +  , path: })
-//     res.status(200).json(file)
-//     .catch(next)
-// })
+router.get('/download/:id', requireToken, function (req, res) {
+  File.findOne({ _id: req.params.id, owner: req.user.id })
+    .then(file => {
+      console.log(file.path)
+      res.setHeader('Content-disposition', 'attachment; filename=' + file.filename)
+      res.setHeader('Content-type', file.mimetype)
+      const fileStream = fs.createReadStream(file.path)
+      fileStream.pipe(res)
+    })
+})
+
+router.patch('/files/:id', requireToken, (req, res, next) => {
+  File.findOne({ _id: req.params.id, owner: req.user.id })
+    .then(file => {
+      const newName = req.body.name + path.parse(file.originalName).ext
+      const newPath = 'uploads/' + req.body.name + path.parse(file.originalName).ext
+      fs.renameSync('uploads/New-Name.png', newPath)
+      return File.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, { name: newName, path: newPath })
+    })
+    .then(file => res.status(200).json(file))
+    .catch(next)
+})
 
 router.delete('/files/:id', requireToken, (req, res, next) => {
   File.deleteOne({ _id: req.params.id, owner: req.user._id })
