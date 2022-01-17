@@ -4,4 +4,4 @@
 # Entity Relationship Diagram
 ==============================
 
-![ERD one: user ----to---< many: files](https://photos.app.goo.gl/CSBVKaMPHMZxGtir6 "ERD")
+[ERD one: user ----to---< many: files](https://photos.app.goo.gl/CSBVKaMPHMZxGtir6)
