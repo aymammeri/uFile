@@ -33,31 +33,31 @@ router.post('/files', requireToken, upload.single('file'), (req, res, next) => {
     size: req.file.size,
     owner: req.user._id
   })
-    .then(() => res.status(201).send('File uploaded successfully! '))
+    .then(file => res.status(201).json({ message: 'File uploaded Successfully!', file }))
     .catch(next)
 })
 
 router.get('/files/:id', requireToken, (req, res, next) => {
   File.findOne({ _id: req.params.id, owner: req.user.id })
-    .then(file => res.status(201).json(file))
+    .then(file => res.status(200).json(file))
     .catch(next)
 })
 
 router.get('/files', requireToken, (req, res, next) => {
   File.find({ owner: req.user.id })
-    .then(file => res.status(201).json(file))
+    .then(file => res.status(200).json(file))
     .catch(next)
 })
 
-router.get('/download/:id', requireToken, function (req, res) {
+router.get('/download/:id', requireToken, (req, res, next) => {
   File.findOne({ _id: req.params.id, owner: req.user.id })
     .then(file => {
-      console.log(file.path)
       res.setHeader('Content-disposition', 'attachment; filename=' + file.filename)
       res.setHeader('Content-type', file.mimetype)
       const fileStream = fs.createReadStream(file.path)
       fileStream.pipe(res)
     })
+    .catch(next)
 })
 
 router.patch('/files/:id', requireToken, (req, res, next) => {
@@ -65,19 +65,20 @@ router.patch('/files/:id', requireToken, (req, res, next) => {
     .then(file => {
       const newName = req.body.name + path.parse(file.originalName).ext
       const newPath = 'uploads/' + req.body.name + path.parse(file.originalName).ext
-      fs.renameSync('uploads/New-Name.png', newPath)
+      fs.renameSync(file.path, newPath)
       return File.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, { name: newName, path: newPath })
     })
-    .then(file => res.status(200).json(file))
+    .then(file => res.status(200).send('File Renamed Successfully'))
     .catch(next)
 })
 
 router.delete('/files/:id', requireToken, (req, res, next) => {
-  File.deleteOne({ _id: req.params.id, owner: req.user._id })
+  File.findOne({ _id: req.params.id, owner: req.user._id })
     .then(file => {
-      // fs.unlink(file.path)
-      res.status(201).json(file)
+      fs.unlinkSync(file.path)
     })
+  File.deleteOne({ _id: req.params.id, owner: req.user._id })
+    .then(file => res.status(204).json(file))
     .catch(next)
 })
 
