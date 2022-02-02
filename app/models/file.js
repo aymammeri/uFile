@@ -9,28 +9,28 @@ const fileSchema = new mongoose.Schema({
     required: true
   },
   fieldName: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
   encoding: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
   mimetype: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
   originalName: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
   path: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
   size: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
